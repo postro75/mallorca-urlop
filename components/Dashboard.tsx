@@ -69,12 +69,11 @@ export function Dashboard() {
   }
 
   return (
-    <div className="app">
+    <div className="stage">
+      <div className="stage-bg" key={place.id} style={{ backgroundImage: `url(${place.photo})` }} />
+      <div className="app">
       <header className="topbar">
-        <div>
-          <div className="kicker">Mallorca · rodzina</div>
-          <h1>Cala Millor</h1>
-        </div>
+        <BrandMark />
         <div className="dates">22.09 – 01.10</div>
       </header>
 
@@ -91,11 +90,14 @@ export function Dashboard() {
           <Hero wx={wx} place={place} />
           <PlacePicker place={place} onPick={setPlace} />
           {wx && <Metrics wx={wx} />}
-          <section className="fest" style={{ marginTop: 16 }}>
-            <div className="when">{FESTIVAL.dates}</div>
-            <h3>{FESTIVAL.title}</h3>
-            <p>{FESTIVAL.overlap}</p>
-            <p>{FESTIVAL.fireworks}</p>
+          <section className="fest">
+            <img className="fest-bg" src="/photos/cala-millor.jpg" alt="" />
+            <div className="fest-copy">
+              <div className="when">{FESTIVAL.dates}</div>
+              <h3>{FESTIVAL.title}</h3>
+              <p>{FESTIVAL.overlap}</p>
+              <p>{FESTIVAL.fireworks}</p>
+            </div>
           </section>
           <h3 style={{ margin: "22px 0 10px", fontSize: 13, letterSpacing: "0.08em", textTransform: "uppercase", color: "var(--muted)" }}>
             Cztery wypady z hotelu
@@ -253,12 +255,15 @@ export function Dashboard() {
           </section>
 
           <section className="fest">
-            <div className="when">{FESTIVAL.dates}</div>
-            <h3>{FESTIVAL.title}</h3>
-            <p>{FESTIVAL.overlap}</p>
-            <p>{FESTIVAL.fireworks}</p>
-            <p>{FESTIVAL.extra}</p>
-            <p>{FESTIVAL.source}</p>
+            <img className="fest-bg" src="/photos/cala-millor.jpg" alt="" />
+            <div className="fest-copy">
+              <div className="when">{FESTIVAL.dates}</div>
+              <h3>{FESTIVAL.title}</h3>
+              <p>{FESTIVAL.overlap}</p>
+              <p>{FESTIVAL.fireworks}</p>
+              <p>{FESTIVAL.extra}</p>
+              <p>{FESTIVAL.source}</p>
+            </div>
           </section>
 
           <h3 className="sec-label">Ciekawostki</h3>
@@ -375,6 +380,37 @@ export function Dashboard() {
           </button>
         ))}
       </nav>
+      </div>
+    </div>
+  );
+}
+
+function BrandMark() {
+  return (
+    <div className="brand">
+      <svg className="brand-mark" viewBox="0 0 48 48" aria-hidden>
+        <circle className="brand-sun" cx="24" cy="18" r="7" />
+        <g className="brand-rays">
+          {[0, 45, 90, 135, 180, 225, 270, 315].map((a) => {
+            const r = (a * Math.PI) / 180;
+            return (
+              <line
+                key={a}
+                x1={24 + Math.cos(r) * 10}
+                y1={18 + Math.sin(r) * 10}
+                x2={24 + Math.cos(r) * 13.5}
+                y2={18 + Math.sin(r) * 13.5}
+              />
+            );
+          })}
+        </g>
+        <path className="brand-wave" d="M6 34c4 0 4-4 8-4s4 4 8 4 4-4 8-4 4 4 8 4" />
+        <path className="brand-wave dim" d="M6 40c4 0 4-4 8-4s4 4 8 4 4-4 8-4 4 4 8 4" />
+      </svg>
+      <div>
+        <div className="kicker">Mallorca · Llevant</div>
+        <h1>Cala Millor</h1>
+      </div>
     </div>
   );
 }
@@ -392,6 +428,7 @@ function WeatherStrip({
 }) {
   return (
     <button className="wx-strip glass" type="button" onClick={onOpen} aria-label="Otwórz pogodę">
+      <img className="wx-thumb" src={place.photo} alt="" />
       <WxMeteo code={wx?.weather.code} size={40} />
       <span className="wx-main">
         <span className="wx-place">Pogoda · {place.name}</span>
@@ -416,6 +453,7 @@ function PlacePicker({ place, onPick }: { place: Place; onPick: (p: Place) => vo
     <div className="places">
       {PLACES.map((p) => (
         <button key={p.id} className={p.id === place.id ? "on" : ""} onClick={() => onPick(p)}>
+          <img src={p.photo} alt="" />
           {p.name}
         </button>
       ))}
@@ -460,21 +498,23 @@ function Hero({
 
 function Metrics({ wx }: { wx: WeatherCard }) {
   const items = [
-    { lab: "Wschód", val: fmtTime(wx.sun.sunrise), sub: "lokalnie", ico: "sunup" as const },
-    { lab: "Zachód", val: fmtTime(wx.sun.sunset), sub: "lokalnie", ico: "sundown" as const },
-    { lab: "Morze", val: fmtNum(wx.sea.temperature_c, 1, "°"), sub: "powierzchnia", ico: "sea" as const },
-    { lab: "Fala", val: fmtNum(wx.sea.wave_height_m, 1, " m"), sub: `${fmtNum(wx.sea.wave_period_s, 0)} s`, ico: "wave" as const },
-    { lab: "Ciśnienie", val: fmtNum(wx.atmosphere.pressure_hpa, 0, " hPa"), sub: "poziom morza", ico: "pressure" as const },
-    { lab: "Wiatr", val: fmtNum(wx.wind.speed_kmh, 0, " km/h"), sub: wx.wind.direction, ico: "wind" as const },
+    { lab: "Wschód", val: fmtTime(wx.sun.sunrise), sub: "lokalnie", ico: "sunup" as const, photo: "/photos/cala-millor-bay.jpg" },
+    { lab: "Zachód", val: fmtTime(wx.sun.sunset), sub: "lokalnie", ico: "sundown" as const, photo: "/photos/cala-ratjada.jpg" },
+    { lab: "Morze", val: fmtNum(wx.sea.temperature_c, 1, "°"), sub: "powierzchnia", ico: "sea" as const, photo: "/photos/cala-millor.jpg" },
+    { lab: "Fala", val: fmtNum(wx.sea.wave_height_m, 1, " m"), sub: `${fmtNum(wx.sea.wave_period_s, 0)} s`, ico: "wave" as const, photo: "/photos/cala-agulla.jpg" },
+    { lab: "Ciśnienie", val: fmtNum(wx.atmosphere.pressure_hpa, 0, " hPa"), sub: "poziom morza", ico: "pressure" as const, photo: "/photos/porto-cristo.jpg" },
+    { lab: "Wiatr", val: fmtNum(wx.wind.speed_kmh, 0, " km/h"), sub: wx.wind.direction, ico: "wind" as const, photo: "/photos/far.jpg" },
     ...(isDaytime(wx)
-      ? [{ lab: "UV", val: fmtNum(wx.atmosphere.uv, 1), sub: "indeks", ico: "uv" as const }]
+      ? [{ lab: "UV", val: fmtNum(wx.atmosphere.uv, 1), sub: "indeks", ico: "uv" as const, photo: "/photos/cala-domingos.jpg" }]
       : []),
-    { lab: "Wilgotność", val: fmtNum(wx.atmosphere.humidity_percent, 0, "%"), sub: "powietrze", ico: "hum" as const }
+    { lab: "Wilgotność", val: fmtNum(wx.atmosphere.humidity_percent, 0, "%"), sub: "powietrze", ico: "hum" as const, photo: "/photos/sa-coma.jpg" }
   ];
   return (
     <div className="metrics">
       {items.map((m) => (
         <div className="metric" key={m.lab}>
+          <img src={m.photo} alt="" />
+          <div className="metric-veil" />
           <div className="lab">
             <MiniMetricIcon name={m.ico} />
             {m.lab}
