@@ -431,10 +431,8 @@ function Hero({
   place: Place;
 }) {
   return (
-    <section
-      className="hero-wx crystal"
-      style={{ backgroundImage: "url(/photos/cala-millor-bay.jpg)" }}
-    >
+    <section className="hero-wx crystal">
+      <img className="hero-photo" src={place.photo} alt={place.name} />
       <div className="veil" />
       <div className="glyph">
         <WxMeteo code={wx?.weather.code} night={Boolean(wx && !isDaytime(wx))} size={96} />
